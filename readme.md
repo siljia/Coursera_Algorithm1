@@ -22,7 +22,7 @@ weightedQuickUnionUF is based on array, which is one dimensional data structure.
 Need a virtual top and a virtual bottom to decrease time complexity when decide percolation appears or not. Otherwise,  traverses in the first row and the last row are needed. The virtual top and virtual bottom can't be near with other grids.
 
 #### 3.BackWash problem
-####4.Mark state
+#### 4.Mark state
 need a two dimensional byte array to mark state of each grid.
 
 
