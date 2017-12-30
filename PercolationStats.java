@@ -1,19 +1,24 @@
 /*
 @Author:Shiqi Jia
  */
+
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
-import java.lang.Math;
-
-
 public class PercolationStats {
-    final private double[] results;
-//    final private double size;
+    private final double[] results;
+    private final double CONFIDENCE_95;
+    private final double mean;
+    private final double std;
+
 
     // perform trials independent experiments on an n-by-n grid
     public PercolationStats(int n, int trials) {
+        validate(n);
+        validate(trials);
         results = new double[trials];
+        CONFIDENCE_95 = 1.96;
+
         double size = n * n;
         for (int i = 0; i < trials; i++) {
             Percolation p = new Percolation(n);
@@ -28,28 +33,39 @@ public class PercolationStats {
             }
             results[i] = count / (size * 1.0);
 
+
+        }
+        //better than calculate later.
+        mean = StdStats.mean(results);
+        std = StdStats.stddev(results);
+    }
+
+    private void validate(int p) {
+
+        if (p <= 0) {
+            throw new IllegalArgumentException("index " + p + " is not less than 1");
         }
     }
 
     // sample mean of percolation threshold
     public double mean() {
-        return StdStats.mean(results);
+        return mean;
 
     }
 
     // sample standard deviation of percolation threshold
     public double stddev() {
-        return StdStats.stddev(results);
+        return std;
     }
 
     // low  endpoint of 95% confidence interval
     public double confidenceLo() {
-        return this.mean() - 1.96 * this.stddev() / Math.sqrt(results.length);
+        return mean - CONFIDENCE_95 * std / Math.sqrt(results.length);
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return this.mean() + 1.96 * this.stddev() / Math.sqrt(results.length);
+        return mean + CONFIDENCE_95 * std / Math.sqrt(results.length);
     }
 
     // test client (described below)
@@ -59,7 +75,7 @@ public class PercolationStats {
         PercolationStats test = new PercolationStats(n, t);
         System.out.println(test.mean());
         System.out.println(test.stddev());
-        System.out.println(test.confidenceLo());
-        System.out.println(test.confidenceHi());
+        System.out.println("lo" + test.confidenceLo());
+        System.out.println("Hi" + test.confidenceHi());
     }
 }
